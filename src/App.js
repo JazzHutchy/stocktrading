@@ -13,17 +13,19 @@ loadQuoteForStock('nflx')
 class App extends Component {
   state = {
     error: null,
+    enteredSymbol: 'NFLX',
     quote: null
   }
 
   // The first time our component is rendered
   // this method is called
   componentDidMount() {
-    loadQuoteForStock('nflxs')
+    loadQuoteForStock('nflx')
       .then((quote) => {
         this.setState({ quote: quote })
       })
       .catch((error) => {
+        // 404 not found
         if (error.response.status === 404) {
           error = new Error('The stock symbol does not exist')
         }
@@ -33,12 +35,15 @@ class App extends Component {
   }
 
   render() {
-    const { error, quote } = this.state
+    const { error, enteredSymbol, quote } = this.state
 
 
     return (
       <div className="App">
         <h1>Wolf of React</h1>
+
+        <input value={enteredSymbol} placeholder='Symbol e.g. NFLX' aria-label='Symbol' />
+
         {
           !!error && // Conditional that must pass
           <p>{error.message}</p>
@@ -54,7 +59,7 @@ class App extends Component {
               week52Low={90}
             />
           ) : (
-              <p>Loading...</p>
+              <p className="animate">Loading...</p>
             )
         }
       </div>
